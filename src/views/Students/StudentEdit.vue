@@ -2,7 +2,7 @@
     <div class="container mt-5">
         <div class="card">
             <div class="card-header">
-                <h4>Add Students</h4>
+                <h4>Edit Student</h4>
             </div>
             <div class="card-body">
                 <ul class="alert alert-warning" v-if="Object.keys(this.errorList).length > 0">
@@ -27,7 +27,7 @@
                     <input type="text" v-model="model.student.phone" class="form-control">
                 </div>
                 <div class="mb-3">
-                    <button type="button" @click="saveStudent" class="btn btn-primary">Save</button>
+                    <button type="button" @click="updateStudent" class="btn btn-primary">Update</button>
 
                 </div>
             </div>
@@ -41,7 +41,7 @@ import axios from 'axios';
 
 
 export default{
-    name:'studentCreate',
+    name:'studentEdit',
     data(){
         return {
             errorList : '',
@@ -55,8 +55,29 @@ export default{
             }
         }
     },
+    mounted(){
+        // console.log(this.$route.params.id);
+        this.getStudentData(this.$route.params.id);
+
+    },
     methods:{
-        saveStudent(){
+        getStudentData(studentId){
+            axios.get(`http://localhost:8000/api/student/${studentId}/edit`)
+                .then(res => {
+                    // console.log(res.data.student);
+                    this.model.student   = res.data.student;
+    
+
+
+            }) .catch(function (error) {
+                if (error.response) {
+                    if(error.response.status == 404){
+                       alert(error.response.data.message);
+                    }
+                }
+            });
+        },
+        updateStudent(){
             var mythis = this;
             axios.post('http://localhost:8000/api/students',this.model.student)
                  .then(res => {
