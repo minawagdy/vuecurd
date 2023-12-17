@@ -31,7 +31,8 @@
               <td>{{ student.phone }}</td>
               <td>{{ student.created_at }}</td>
               <td><RouterLink :to="{ path : '/student/' + student.id + '/edit' }" class="btn btn-success me-2">Edit</RouterLink>
-               <button type="button" class="btn btn-danger">Delete</button>
+               <button type="button" @click="deleteStudent(student.id)" class="btn btn-danger">Delete</button>
+
               </td>
 
 
@@ -65,17 +66,28 @@ import { RouterLink } from 'vue-router';
     },
     mounted() {
         this.getStudents();
+        this.studentId = this.$route.params.id;
         // console.log('i am here')
     },
     methods: {
         getStudents() {
             axios.get('http://localhost:8000/api/students').then(res => {
                 this.students = res.data.students;
-                console.log(this.students);
+                // console.log(this.students);
             });
-        }
-    },
-    components: { RouterLink }
-}
+        },
+        deleteStudent(studentId) {
+            //     this.students = res.data.students;
+                if(confirm('Are you sure, you want to delete this data?')){
+                axios.delete(`http://localhost:8000/api/student/${studentId}/delete`)
+                      .then(res => {
+                        alert(res.data.message);
+                        this.getStudents();
+                      });
+
+                }
+        },
+      },
+    }
  
   </script>

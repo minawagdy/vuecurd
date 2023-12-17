@@ -34,7 +34,8 @@ const router = createRouter({
       path: '/student/:id/edit',
       name: 'studentEdit',
       component: StudentEdit
-    }
+    },
+    
   ]
 })
 
